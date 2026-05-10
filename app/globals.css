@@ -1,0 +1,205 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap');
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-cream-50 text-gray-900 antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+}
+
+@layer components {
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-emerald-700 to-emerald-500;
+  }
+
+  .text-gradient-gold {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-gold-600 to-gold-400;
+  }
+
+  .glass-card {
+    @apply bg-white/80 backdrop-blur-xl border border-white/20 shadow-lg;
+  }
+
+  .glass-card-dark {
+    @apply bg-emerald-950/80 backdrop-blur-xl border border-emerald-800/30 shadow-xl;
+  }
+
+  .btn-primary {
+    @apply px-8 py-4 bg-emerald-700 hover:bg-emerald-800 text-white rounded-full font-semibold 
+           transition-all duration-300 hover:shadow-lg hover:shadow-emerald-700/25 
+           hover:-translate-y-0.5 active:translate-y-0;
+  }
+
+  .btn-secondary {
+    @apply px-8 py-4 bg-white hover:bg-cream-50 text-emerald-800 border-2 border-emerald-100 
+           rounded-full font-semibold transition-all duration-300 hover:border-emerald-300 
+           hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0;
+  }
+
+  .section-padding {
+    @apply px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-20;
+  }
+
+  /* Custom Clerk Styling */
+  .clerk-custom-styling {
+    /* Override Clerk's default styles */
+  }
+
+  .clerk-custom-styling .cl-socialButtonsIconButton {
+    @apply shadow-none;
+  }
+
+  .clerk-custom-styling .cl-formButtonPrimary {
+    @apply shadow-lg shadow-emerald-500/30;
+  }
+
+  .clerk-custom-styling .cl-footerAction {
+    @apply mt-6;
+  }
+
+  .clerk-custom-styling .cl-internal-b3fm6y {
+    @apply hidden;
+  }
+}
+
+@layer utilities {
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+
+  .backface-hidden {
+    backface-visibility: hidden;
+  }
+}
+
+/* Additional Clerk customization */
+.cl-rootBox {
+  width: 100%;
+}
+
+.cl-card {
+  box-shadow: none !important;
+  border: none !important;
+  background: transparent !important;
+  width: 100%;
+}
+
+.cl-socialButtonsBlockButton {
+  box-shadow: none !important;
+  background: white !important;
+}
+
+.cl-formButtonPrimary {
+  text-transform: none !important;
+  letter-spacing: normal !important;
+}
+
+.cl-footer {
+  display: none !important;
+}
+
+.cl-footerActionLink {
+  font-weight: 600 !important;
+}
+
+.cl-footerAction {
+  text-align: center !important;
+  margin-top: 1.5rem !important;
+}
+
+.cl-dividerRow {
+  margin-top: 1.5rem !important;
+  margin-bottom: 1.5rem !important;
+}
+
+.cl-formFieldInput:focus {
+  outline: none !important;
+}
+
+.cl-headerTitle,
+.cl-headerSubtitle {
+  display: none !important;
+}
+
+.cl-identityPreview {
+  display: none !important;
+}
+
+.cl-identityPreviewText {
+  display: none !important;
+}
+
+.cl-identityPreviewEditButton {
+  display: none !important;
+}
+
+.cl-formFieldRow {
+  margin-bottom: 1rem !important;
+}
+
+.cl-form {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 1rem !important;
+}
+
+.cl-main {
+  width: 100% !important;
+}
+
+.cl-formFieldLabel {
+  display: block !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.cl-formFieldLabelRow {
+  margin-bottom: 0.5rem !important;
+}
+
+.cl-formFieldInput {
+  background: white !important;
+}
+
+.cl-socialButtonsBlockButtonText {
+  color: #334155 !important;
+}
+
+.cl-alternativeMethodsBlockButton {
+  border: 2px solid #e2e8f0 !important;
+  border-radius: 0.75rem !important;
+}
+
+.cl-alternativeMethodsBlockButton:hover {
+  background: #f8fafc !important;
+}
+
+/* Hide "Last used" badge */
+.cl-badge {
+  display: none !important;
+}
+
+/* Ensure proper spacing */
+.clerk-custom-styling .cl-internal-b3fm6y {
+  display: none !important;
+}
+
+/* Make sure all inputs are visible */
+.cl-formFieldInput[type="password"],
+.cl-formFieldInput[type="email"],
+.cl-formFieldInput[type="text"] {
+  display: block !important;
+  width: 100% !important;
+  background: white !important;
+}
