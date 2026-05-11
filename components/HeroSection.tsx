@@ -12,6 +12,14 @@ const images = [
 
 export default function HeroSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [particles, setParticles] = useState<Array<{
+    id: number;
+    x: number;
+    y: number;
+    size: number;
+    duration: number;
+    delay: number;
+  }>>([]);
 
   // Auto-play interval handling for the visual slider
   useEffect(() => {
@@ -21,15 +29,19 @@ export default function HeroSection() {
     return () => clearInterval(timer);
   }, []);
 
-  // Premium floating particles computation
-  const particles = Array.from({ length: 25 }).map((_, i) => ({
-    id: i,
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    size: Math.random() * 4 + 2,
-    duration: Math.random() * 15 + 10,
-    delay: Math.random() * 5,
-  }));
+  // Premium floating particles computation - only on client side
+  useEffect(() => {
+    setParticles(
+      Array.from({ length: 25 }).map((_, i) => ({
+        id: i,
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        size: Math.random() * 4 + 2,
+        duration: Math.random() * 15 + 10,
+        delay: Math.random() * 5,
+      }))
+    );
+  }, []);
 
   return (
     <section className="relative w-full h-screen overflow-hidden bg-emerald-950 flex items-center justify-center">

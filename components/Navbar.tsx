@@ -1,12 +1,11 @@
-"use client";
+'use client'
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { BookOpen, Menu, X, ChevronDown, Search } from "lucide-react";
+import { BookOpen, Menu, X, ChevronDown, Search, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useAuth, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
-import AuthModal from "./AuthModal";
+import { useRouter } from "next/navigation";
 
 const navLinks = [
   { name: "Accueil", href: "/" },
@@ -26,11 +25,12 @@ const navLinks = [
 ];
 
 export default function Navbar() {
+  const router = useRouter()
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const [authModal, setAuthModal] = useState<"login" | "signup" | null>(null);
-  const { isSignedIn } = useAuth();
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -39,6 +39,25 @@ export default function Navbar() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    // Check if user is logged in
+    fetch('/api/auth/me')
+      .then(res => res.json())
+      .then(data => {
+        if (data.user) {
+          setUser(data.user)
+        }
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false))
+  }, [])
+
+  const handleLogout = async () => {
+    await fetch('/api/auth/logout', { method: 'POST' })
+    setUser(null)
+    router.push('/')
+  }
 
   return (
     <motion.nav
@@ -143,44 +162,41 @@ export default function Navbar() {
               <Search className="w-5 h-5" />
             </button>
 
-            {/* Show when user is NOT logged in */}
-            {!isSignedIn && (
-              <button
-                onClick={() => setAuthModal("login")}
-                className={cn(
-                  "px-6 py-2.5 text-sm font-semibold transition-colors cursor-pointer",
-                  scrolled ? "text-emerald-800 hover:text-emerald-900" : "text-white hover:text-emerald-200"
-                )}
-              >
-                Se connecter
-              </button>
-            )}
-
-            {/* Show when user IS logged in */}
-            {isSignedIn && (
+            {!loading && !user && (
               <>
-                <Link href="/dashboard">
-                  <span
-                    className={cn(
-                      "inline-block px-6 py-2.5 text-sm font-semibold transition-colors rounded-full cursor-pointer",
-                      scrolled 
-                        ? "text-emerald-800 hover:text-emerald-900 hover:bg-emerald-50" 
-                        : "text-white hover:text-emerald-200 hover:bg-white/20"
-                    )}
-                  >
-                    Dashboard
+                <Link href="/sign-in">
+                  <span className={cn(
+                    "inline-block px-6 py-2.5 text-sm font-semibold transition-colors cursor-pointer",
+                    scrolled ? "text-emerald-800 hover:text-emerald-900" : "text-white hover:text-emerald-200"
+                  )}>
+                    Se connecter
                   </span>
                 </Link>
-                <UserButton 
-                  afterSignOutUrl="/"
-                  appearance={{
-                    elements: {
-                      avatarBox: "w-10 h-10 rounded-full border-2 border-emerald-500",
-                      userButtonPopoverCard: "shadow-2xl rounded-2xl",
-                      userButtonPopoverActionButton: "hover:bg-emerald-50",
-                    },
-                  }}
-                />
+              </>
+            )}
+
+            {user && (
+              <>
+                <Link href={user.role === 'ADMIN' ? '/admin' : '/dashboard'}>
+                  <span className={cn(
+                    "inline-block px-6 py-2.5 text-sm font-semibold transition-colors rounded-full cursor-pointer",
+                    scrolled 
+                      ? "text-emerald-800 hover:text-emerald-900 hover:bg-emerald-50" 
+                      : "text-white hover:text-emerald-200 hover:bg-white/20"
+                  )}>
+                    Mon Espace
+                  </span>
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className={cn(
+                    "p-2.5 rounded-full transition-all",
+                    scrolled ? "hover:bg-red-50 text-gray-600 hover:text-red-700" : "text-white hover:bg-white/20"
+                  )}
+                  title="Déconnexion"
+                >
+                  <LogOut className="w-5 h-5" />
+                </button>
               </>
             )}
           </div>
@@ -219,32 +235,27 @@ export default function Navbar() {
               ))}
               
               <div className="pt-4 flex flex-col gap-2">
-                {!isSignedIn && (
-                  <button
-                    onClick={() => setAuthModal("login")}
-                    className="w-full px-4 py-3 text-center text-emerald-800 font-semibold hover:bg-emerald-50 rounded-xl transition-colors"
-                  >
-                    Se connecter
-                  </button>
+                {!user && (
+                  <Link href="/sign-in" className="w-full">
+                    <span className="block w-full px-4 py-3 text-center text-emerald-800 font-semibold hover:bg-emerald-50 rounded-xl transition-colors cursor-pointer">
+                      Se connecter
+                    </span>
+                  </Link>
                 )}
 
-                {isSignedIn && (
+                {user && (
                   <>
-                    <Link href="/dashboard" className="w-full">
+                    <Link href={user.role === 'ADMIN' ? '/admin' : '/dashboard'} className="w-full">
                       <span className="block w-full px-4 py-3 bg-emerald-700 text-white text-center font-semibold rounded-full cursor-pointer hover:bg-emerald-800 transition-colors">
-                        Dashboard
+                        Mon Espace
                       </span>
                     </Link>
-                    <div className="flex items-center justify-center py-3">
-                      <UserButton 
-                        afterSignOutUrl="/"
-                        appearance={{
-                          elements: {
-                            avatarBox: "w-12 h-12 rounded-full border-2 border-emerald-500",
-                          },
-                        }}
-                      />
-                    </div>
+                    <button
+                      onClick={handleLogout}
+                      className="w-full px-4 py-3 bg-red-600 text-white text-center font-semibold rounded-full hover:bg-red-700 transition-colors"
+                    >
+                      Déconnexion
+                    </button>
                   </>
                 )}
               </div>
@@ -252,12 +263,6 @@ export default function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
-
-      <AuthModal 
-        isOpen={!!authModal} 
-        onClose={() => setAuthModal(null)} 
-        type={authModal || "login"} 
-      />
     </motion.nav>
   );
 }

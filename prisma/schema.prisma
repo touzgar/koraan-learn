@@ -1,0 +1,227 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String        @id @default(cuid())
+  clerkId        String        @unique
+  email          String        @unique
+  firstName      String?
+  lastName       String?
+  imageUrl       String?
+  role           UserRole      @default(STUDENT)
+  isActive       Boolean       @default(true)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  certificates   Certificate[]
+  coursesCreated Course[]      @relation("InstructorCourses")
+  enrollments    Enrollment[]
+  quizAttempts   QuizAttempt[]
+
+  @@index([clerkId])
+  @@index([email])
+  @@index([role])
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  slug        String   @unique
+  imageUrl    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  courses     Course[]
+
+  @@index([slug])
+}
+
+model Course {
+  id           String        @id @default(cuid())
+  title        String
+  description  String?
+  imageUrl     String?
+  price        Float         @default(0)
+  status       CourseStatus  @default(DRAFT)
+  isPublished  Boolean       @default(false)
+  instructorId String
+  categoryId   String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  certificates Certificate[]
+  category     Category?     @relation(fields: [categoryId], references: [id])
+  instructor   User          @relation("InstructorCourses", fields: [instructorId], references: [id], onDelete: Cascade)
+  enrollments  Enrollment[]
+  lessons      Lesson[]
+  quizzes      Quiz[]
+
+  @@index([instructorId])
+  @@index([categoryId])
+  @@index([status])
+  @@index([isPublished])
+}
+
+model Lesson {
+  id          String           @id @default(cuid())
+  title       String
+  description String?
+  videoUrl    String?
+  pdfUrl      String?
+  duration    Int?
+  position    Int
+  isFree      Boolean          @default(false)
+  isPublished Boolean          @default(false)
+  courseId    String
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  course      Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  progress    LessonProgress[]
+
+  @@index([courseId])
+  @@index([position])
+}
+
+model Enrollment {
+  id             String           @id @default(cuid())
+  status         EnrollmentStatus @default(ACTIVE)
+  progress       Float            @default(0)
+  studentId      String
+  courseId       String
+  enrolledAt     DateTime         @default(now())
+  completedAt    DateTime?
+  updatedAt      DateTime         @updatedAt
+  course         Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  student        User             @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  lessonProgress LessonProgress[]
+
+  @@unique([studentId, courseId])
+  @@index([studentId])
+  @@index([courseId])
+  @@index([status])
+}
+
+model LessonProgress {
+  id           String     @id @default(cuid())
+  isCompleted  Boolean    @default(false)
+  watchedTime  Int        @default(0)
+  enrollmentId String
+  lessonId     String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  enrollment   Enrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+  lesson       Lesson     @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([enrollmentId, lessonId])
+  @@index([enrollmentId])
+  @@index([lessonId])
+}
+
+model Quiz {
+  id           String         @id @default(cuid())
+  title        String
+  description  String?
+  passingScore Int            @default(70)
+  courseId     String
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  course       Course         @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  quizAttempts QuizAttempt[]
+  questions    QuizQuestion[]
+
+  @@index([courseId])
+}
+
+model QuizQuestion {
+  id            String   @id @default(cuid())
+  question      String
+  options       String[]
+  correctAnswer String
+  explanation   String?
+  position      Int
+  quizId        String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  quiz          Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+
+  @@index([quizId])
+  @@index([position])
+}
+
+model QuizAttempt {
+  id          String   @id @default(cuid())
+  score       Float
+  answers     Json
+  isPassed    Boolean  @default(false)
+  studentId   String
+  quizId      String
+  attemptedAt DateTime @default(now())
+  quiz        Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  student     User     @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([studentId])
+  @@index([quizId])
+}
+
+model Certificate {
+  id             String   @id @default(cuid())
+  certificateUrl String?
+  issuedAt       DateTime @default(now())
+  studentId      String
+  courseId       String
+  course         Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  student        User     @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, courseId])
+  @@index([studentId])
+  @@index([courseId])
+}
+
+model Notification {
+  id          String           @id @default(cuid())
+  type        NotificationType
+  title       String
+  description String
+  details     String?
+  entityId    String?
+  entityType  String?
+  isRead      Boolean          @default(false)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@index([isRead])
+  @@index([createdAt])
+  @@index([type])
+}
+
+enum UserRole {
+  ADMIN
+  INSTRUCTOR
+  STUDENT
+}
+
+enum CourseStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum EnrollmentStatus {
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum NotificationType {
+  NEW_USER
+  NEW_COURSE
+  NEW_ENROLLMENT
+  COMPLETED_ENROLLMENT
+  CANCELLED_ENROLLMENT
+  INACTIVE_USER
+  DRAFT_COURSE
+}
