@@ -45,9 +45,10 @@ export async function loginUser(email: string, password: string) {
     throw new Error('Account is disabled')
   }
 
-  // For development: accept hardcoded admin password
+  // For development: accept hardcoded passwords
   // In production, check against hashed password in database
-  if (password === 'admin123') {
+  const validPasswords = ['admin123', 'instructor123', 'student123']
+  if (validPasswords.includes(password)) {
     return user
   }
 
@@ -174,4 +175,70 @@ export async function ensureAdminExists() {
   }
 
   return admin
+}
+
+/**
+ * Ensure instructor user exists in database
+ */
+export async function ensureInstructorExists() {
+  const instructorEmail = 'instructor@koraanlearn.com'
+
+  let instructor = await prisma.user.findUnique({
+    where: { email: instructorEmail },
+  })
+
+  if (!instructor) {
+    // Create instructor user
+    instructor = await prisma.user.create({
+      data: {
+        email: instructorEmail,
+        firstName: 'Mohamed',
+        lastName: 'Ahmed',
+        role: UserRole.INSTRUCTOR,
+        isActive: true,
+        clerkId: 'local_instructor',
+      },
+    })
+  } else if (instructor.role !== UserRole.INSTRUCTOR) {
+    // Update existing user to instructor
+    instructor = await prisma.user.update({
+      where: { email: instructorEmail },
+      data: { role: UserRole.INSTRUCTOR, isActive: true },
+    })
+  }
+
+  return instructor
+}
+
+/**
+ * Ensure student user exists in database
+ */
+export async function ensureStudentExists() {
+  const studentEmail = 'student@koraanlearn.com'
+
+  let student = await prisma.user.findUnique({
+    where: { email: studentEmail },
+  })
+
+  if (!student) {
+    // Create student user
+    student = await prisma.user.create({
+      data: {
+        email: studentEmail,
+        firstName: 'Fatima',
+        lastName: 'Hassan',
+        role: UserRole.STUDENT,
+        isActive: true,
+        clerkId: 'local_student',
+      },
+    })
+  } else if (student.role !== UserRole.STUDENT) {
+    // Update existing user to student
+    student = await prisma.user.update({
+      where: { email: studentEmail },
+      data: { role: UserRole.STUDENT, isActive: true },
+    })
+  }
+
+  return student
 }

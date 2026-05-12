@@ -22,6 +22,7 @@ model User {
   coursesCreated Course[]      @relation("InstructorCourses")
   enrollments    Enrollment[]
   quizAttempts   QuizAttempt[]
+  reviews        Review[]
 
   @@index([clerkId])
   @@index([email])
@@ -59,6 +60,7 @@ model Course {
   enrollments  Enrollment[]
   lessons      Lesson[]
   quizzes      Quiz[]
+  reviews      Review[]
 
   @@index([instructorId])
   @@index([categoryId])
@@ -179,6 +181,23 @@ model Certificate {
   @@unique([studentId, courseId])
   @@index([studentId])
   @@index([courseId])
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  rating    Int
+  comment   String
+  userId    String
+  courseId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+  @@index([userId])
+  @@index([courseId])
+  @@index([rating])
 }
 
 model Notification {

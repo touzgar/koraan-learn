@@ -124,6 +124,79 @@ async function main() {
 
   console.log('✅ Sample course created:', course.title)
 
+  // Create sample lessons
+  const lessons = await Promise.all([
+    prisma.lesson.create({
+      data: {
+        title: 'Introduction à Sourate Al-Mulk',
+        description: 'Découvrez l\'importance et les bienfaits de cette sourate',
+        position: 1,
+        duration: 15,
+        isPublished: true,
+        isFree: true,
+        courseId: course.id,
+      },
+    }),
+    prisma.lesson.create({
+      data: {
+        title: 'Versets 1-5 - Mémorisation',
+        description: 'Mémorisez les 5 premiers versets',
+        position: 2,
+        duration: 30,
+        isPublished: true,
+        isFree: false,
+        courseId: course.id,
+      },
+    }),
+    prisma.lesson.create({
+      data: {
+        title: 'Versets 6-10 - Mémorisation',
+        description: 'Mémorisez les versets 6 à 10',
+        position: 3,
+        duration: 30,
+        isPublished: true,
+        isFree: false,
+        courseId: course.id,
+      },
+    }),
+  ])
+
+  console.log('✅ Sample lessons created:', lessons.length)
+
+  // Create enrollment for student
+  const enrollment = await prisma.enrollment.create({
+    data: {
+      studentId: student.id,
+      courseId: course.id,
+      status: 'ACTIVE',
+      progress: 45,
+    },
+  })
+
+  console.log('✅ Sample enrollment created')
+
+  // Create sample review
+  const review = await prisma.review.create({
+    data: {
+      userId: student.id,
+      courseId: course.id,
+      rating: 5,
+      comment: 'Excellent cours! Les explications sont claires et la méthode de mémorisation est très efficace. Je recommande vivement!',
+    },
+  })
+
+  console.log('✅ Sample review created')
+
+  // Create sample certificate
+  const certificate = await prisma.certificate.create({
+    data: {
+      studentId: student.id,
+      courseId: course.id,
+    },
+  })
+
+  console.log('✅ Sample certificate created')
+
   console.log('')
   console.log('🎉 Database seeded successfully!')
   console.log('')

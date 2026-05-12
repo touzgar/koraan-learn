@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { loginUser, createSession, ensureAdminExists } from '@/lib/auth'
+import { loginUser, createSession, ensureAdminExists, ensureInstructorExists, ensureStudentExists } from '@/lib/auth'
 
 export async function POST(request: Request) {
   try {
@@ -13,8 +13,10 @@ export async function POST(request: Request) {
       )
     }
 
-    // Ensure admin user exists
+    // Ensure default users exist
     await ensureAdminExists()
+    await ensureInstructorExists()
+    await ensureStudentExists()
 
     // Login user
     const user = await loginUser(email, password)

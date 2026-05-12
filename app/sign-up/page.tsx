@@ -2,44 +2,56 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Lock, Mail, Loader2, AlertCircle, Eye, EyeOff, ArrowRight } from 'lucide-react'
+import { Lock, Mail, Loader2, AlertCircle, Eye, EyeOff, ArrowRight, User } from 'lucide-react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 
-export default function SignInPage() {
+export default function SignUpPage() {
   const router = useRouter()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  })
   const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [acceptTerms, setAcceptTerms] = useState(false)
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    })
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError('')
 
+    // Validation
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match')
+      setLoading(false)
+      return
+    }
+
+    if (!acceptTerms) {
+      setError('Please accept the terms and conditions')
+      setLoading(false)
+      return
+    }
+
     try {
-      const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      })
-
-      const data = await res.json()
-
-      if (!res.ok) {
-        throw new Error(data.error || 'Login failed')
-      }
-
-      // Redirect based on role
-      if (data.user.role === 'ADMIN') {
-        router.push('/admin')
-      } else if (data.user.role === 'INSTRUCTOR') {
-        router.push('/instructor')
-      } else {
-        router.push('/dashboard')
-      }
+      // TODO: Implement sign up API
+      // For now, just redirect to sign-in
+      setTimeout(() => {
+        router.push('/sign-in')
+      }, 2000)
     } catch (err: any) {
       setError(err.message)
     } finally {
@@ -60,22 +72,22 @@ export default function SignInPage() {
       </div>
 
       {/* Right Side - Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 lg:p-12 bg-gradient-to-br from-slate-50 via-white to-emerald-50">
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 lg:p-12 bg-gradient-to-br from-slate-50 via-white to-emerald-50 overflow-y-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="w-full max-w-md"
+          className="w-full max-w-md my-8"
         >
           {/* Header */}
-          <div className="mb-10">
+          <div className="mb-8">
             <motion.h1
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
               className="text-4xl font-bold text-gray-900 mb-3"
             >
-              Welcome Back
+              Create Account
             </motion.h1>
             <motion.p
               initial={{ opacity: 0 }}
@@ -83,7 +95,7 @@ export default function SignInPage() {
               transition={{ delay: 0.3 }}
               className="text-gray-600"
             >
-              Sign in to continue your learning journey
+              Join our learning community today
             </motion.p>
           </div>
 
@@ -103,18 +115,57 @@ export default function SignInPage() {
           </AnimatePresence>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Name Fields */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  First Name
+                </label>
+                <div className="relative">
+                  <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <input
+                    type="text"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    placeholder="John"
+                    required
+                    className="w-full pl-12 pr-4 py-3.5 bg-white border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all text-gray-900 placeholder:text-gray-400"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Last Name
+                </label>
+                <div className="relative">
+                  <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <input
+                    type="text"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    placeholder="Doe"
+                    required
+                    className="w-full pl-12 pr-4 py-3.5 bg-white border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all text-gray-900 placeholder:text-gray-400"
+                  />
+                </div>
+              </div>
+            </div>
+
             {/* Email */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Email or Username
+                Email Address
               </label>
               <div className="relative">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
                   type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
                   placeholder="email@example.com"
                   required
                   className="w-full pl-12 pr-4 py-3.5 bg-white border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all text-gray-900 placeholder:text-gray-400"
@@ -131,8 +182,9 @@ export default function SignInPage() {
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
                   type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
                   placeholder="••••••••"
                   required
                   className="w-full pl-12 pr-12 py-3.5 bg-white border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all text-gray-900 placeholder:text-gray-400"
@@ -147,18 +199,52 @@ export default function SignInPage() {
               </div>
             </div>
 
-            {/* Remember & Forgot */}
-            <div className="flex items-center justify-between text-sm">
-              <label className="flex items-center gap-2 cursor-pointer">
+            {/* Confirm Password */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Confirm Password
+              </label>
+              <div className="relative">
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <input
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  placeholder="••••••••"
+                  required
+                  className="w-full pl-12 pr-12 py-3.5 bg-white border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all text-gray-900 placeholder:text-gray-400"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
+              </div>
+            </div>
+
+            {/* Terms */}
+            <div>
+              <label className="flex items-start gap-3 cursor-pointer">
                 <input
                   type="checkbox"
-                  className="w-4 h-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
+                  checked={acceptTerms}
+                  onChange={(e) => setAcceptTerms(e.target.checked)}
+                  className="w-5 h-5 mt-0.5 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
                 />
-                <span className="text-gray-600">Remember me</span>
+                <span className="text-sm text-gray-600">
+                  I accept the{' '}
+                  <a href="#" className="text-emerald-700 font-semibold hover:text-emerald-800 transition-colors">
+                    terms and conditions
+                  </a>{' '}
+                  and{' '}
+                  <a href="#" className="text-emerald-700 font-semibold hover:text-emerald-800 transition-colors">
+                    privacy policy
+                  </a>
+                </span>
               </label>
-              <a href="#" className="text-emerald-700 hover:text-emerald-800 font-semibold transition-colors">
-                Forgot password?
-              </a>
             </div>
 
             {/* Submit Button */}
@@ -172,11 +258,11 @@ export default function SignInPage() {
               {loading ? (
                 <>
                   <Loader2 className="w-5 h-5 animate-spin" />
-                  Signing in...
+                  Creating account...
                 </>
               ) : (
                 <>
-                  Sign In
+                  Create Account
                   <ArrowRight className="w-5 h-5" />
                 </>
               )}
@@ -184,7 +270,7 @@ export default function SignInPage() {
           </form>
 
           {/* Divider */}
-          <div className="relative my-8">
+          <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-gray-200" />
             </div>
@@ -193,35 +279,19 @@ export default function SignInPage() {
             </div>
           </div>
 
-          {/* Sign Up Link */}
+          {/* Sign In Link */}
           <div className="text-center">
             <p className="text-gray-600 mb-4">
-              Don't have an account?
+              Already have an account?
             </p>
             <Link
-              href="/sign-up"
+              href="/sign-in"
               className="inline-flex items-center gap-2 text-emerald-700 hover:text-emerald-800 font-bold transition-colors"
             >
-              Create an account
+              Sign in
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
-
-          {/* Test Credentials */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-            className="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-xl"
-          >
-            <p className="text-xs font-bold text-blue-900 mb-2">
-              Test Admin Account
-            </p>
-            <p className="text-xs text-blue-700">
-              <strong>Email:</strong> admin@koraanlearn.com<br />
-              <strong>Password:</strong> admin123
-            </p>
-          </motion.div>
 
           {/* Back to Home */}
           <div className="mt-8 text-center">
