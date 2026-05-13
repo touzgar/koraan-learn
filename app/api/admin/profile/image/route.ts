@@ -1,15 +1,23 @@
 import { NextResponse } from 'next/server'
-import { requireAdmin } from '@/lib/auth'
+import { getCurrentUser } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { writeFile, mkdir } from 'fs/promises'
 import { join } from 'path'
 import { existsSync } from 'fs'
 
 export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
 
 export async function POST(req: Request) {
   try {
-    const user = await requireAdmin()
+    const user = await getCurrentUser()
+    
+    if (!user || user.role !== 'ADMIN') {
+      return NextResponse.json(
+        { error: 'Access denied. Admin privileges required.' },
+        { status: 403 }
+      )
+    }
 
     const formData = await req.formData()
     const file = formData.get('image') as File

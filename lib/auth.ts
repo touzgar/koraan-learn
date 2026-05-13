@@ -113,6 +113,7 @@ export async function getCurrentUser() {
       role: true,
       isActive: true,
       imageUrl: true,
+      createdAt: true,
     },
   })
 

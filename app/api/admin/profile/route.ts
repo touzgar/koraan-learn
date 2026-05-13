@@ -1,13 +1,21 @@
 import { NextResponse } from 'next/server'
-import { requireAdmin } from '@/lib/auth'
+import { getCurrentUser } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 
 export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
 
 // GET admin profile
 export async function GET() {
   try {
-    const user = await requireAdmin()
+    const user = await getCurrentUser()
+    
+    if (!user || user.role !== 'ADMIN') {
+      return NextResponse.json(
+        { error: 'Access denied. Admin privileges required.' },
+        { status: 403 }
+      )
+    }
 
     // Get platform stats
     const [totalUsers, totalCourses, totalEnrollments, totalCertificates] = await Promise.all([
@@ -19,12 +27,13 @@ export async function GET() {
 
     const profile = {
       id: user.id,
-      firstName: user.firstName,
-      lastName: user.lastName,
+      firstName: user.firstName || '',
+      lastName: user.lastName || '',
       email: user.email,
       imageUrl: user.imageUrl,
       role: user.role,
       isActive: user.isActive,
+      createdAt: user.createdAt,
       stats: {
         totalUsers,
         totalCourses,
@@ -46,7 +55,14 @@ export async function GET() {
 // PUT update admin profile
 export async function PUT(req: Request) {
   try {
-    const user = await requireAdmin()
+    const user = await getCurrentUser()
+    
+    if (!user || user.role !== 'ADMIN') {
+      return NextResponse.json(
+        { error: 'Access denied. Admin privileges required.' },
+        { status: 403 }
+      )
+    }
 
     const body = await req.json()
     const { firstName, lastName } = body
@@ -70,12 +86,13 @@ export async function PUT(req: Request) {
 
     const profile = {
       id: updatedUser.id,
-      firstName: updatedUser.firstName,
-      lastName: updatedUser.lastName,
+      firstName: updatedUser.firstName || '',
+      lastName: updatedUser.lastName || '',
       email: updatedUser.email,
       imageUrl: updatedUser.imageUrl,
       role: updatedUser.role,
       isActive: updatedUser.isActive,
+      createdAt: updatedUser.createdAt,
       stats: {
         totalUsers,
         totalCourses,
