@@ -1,5 +1,8 @@
 import { MessageSquare, Send, Inbox, Archive } from 'lucide-react'
 
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 export default function MessagesPage() {
   // Placeholder data - will be connected to real messaging system later
   const messages = [
