@@ -3,6 +3,8 @@ import { prisma } from '@/lib/prisma'
 import { getCurrentUser } from '@/lib/auth'
 import { UserRole } from '@prisma/client'
 
+export const dynamic = 'force-dynamic'
+
 // Update user role (Admin only)
 export async function PATCH(
   req: NextRequest,
