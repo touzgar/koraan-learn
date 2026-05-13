@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { getCurrentUserWithRole } from '@/lib/user-roles'
 
+export const dynamic = 'force-dynamic'
+
 // Get current user's role
 export async function GET() {
   try {

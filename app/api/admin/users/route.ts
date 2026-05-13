@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireAdmin } from '@/lib/user-roles'
 
+export const dynamic = 'force-dynamic'
+
 // Get all users (Admin only)
 export async function GET(req: NextRequest) {
   try {

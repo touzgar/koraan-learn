@@ -3,6 +3,8 @@ import { prisma } from '@/lib/prisma'
 import { getCurrentUser } from '@/lib/auth'
 import { createNotification, NotificationTemplates } from '@/lib/notifications'
 
+export const dynamic = 'force-dynamic'
+
 // GET all spaces
 export async function GET(request: NextRequest) {
   try {
