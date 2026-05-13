@@ -7,9 +7,9 @@ import {
   Target,
   Zap,
   Trophy,
-  Fire,
+  Flame,
   BookOpen,
-  BarChart3,
+  BarChart,
   Loader2,
   Star
 } from 'lucide-react'
@@ -58,7 +58,7 @@ export default function StudentProgressPage() {
   }, [])
 
   const getIconComponent = (iconName: string) => {
-    const icons: Record<string, any> = { Zap, Trophy, Fire, Award }
+    const icons: Record<string, any> = { Zap, Trophy, Flame, Award }
     return icons[iconName] || Award
   }
 
@@ -101,7 +101,7 @@ export default function StudentProgressPage() {
 
         <div className="bg-gradient-to-br from-amber-500 to-orange-600 rounded-3xl p-8 text-white shadow-xl hover:scale-105 transition-all">
           <div className="text-center">
-            <Fire className="w-12 h-12 mx-auto mb-4" />
+            <Flame className="w-12 h-12 mx-auto mb-4" />
             <p className="text-5xl font-bold mb-2">{data.currentStreak}</p>
             <p className="text-amber-100">Day Streak 🔥</p>
           </div>
@@ -119,7 +119,7 @@ export default function StudentProgressPage() {
       {/* Weekly Activity Chart */}
       <div className="bg-white rounded-3xl p-8 shadow-xl border border-emerald-100">
         <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-          <BarChart3 className="w-7 h-7 text-emerald-600" />
+          <BarChart className="w-7 h-7 text-emerald-600" />
           Weekly Activity
         </h2>
         <div className="flex items-end justify-between gap-4 h-48">

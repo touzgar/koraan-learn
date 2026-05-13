@@ -64,33 +64,33 @@ const features = [
 
 export default function FeaturesSection() {
   return (
-    <section id="about" className="py-24 bg-gradient-to-b from-cream-50 to-white relative overflow-hidden">
+    <section id="about" className="py-12 sm:py-16 lg:py-24 bg-gradient-to-b from-cream-50 to-white relative overflow-hidden">
       {/* Decorative elements */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-100/30 rounded-full blur-3xl" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] sm:w-[600px] h-[400px] sm:h-[600px] bg-emerald-100/30 rounded-full blur-3xl" />
 
-      <div className="max-w-7xl mx-auto section-padding relative">
-        {/* Section Header */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+        {/* Section Header - Responsive */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-8 sm:mb-12 lg:mb-16"
         >
-          <span className="inline-block px-4 py-1.5 bg-gold-100 text-gold-700 rounded-full text-sm font-medium mb-4">
+          <span className="inline-block px-3 sm:px-4 py-1.5 bg-gold-100 text-gold-700 rounded-full text-xs sm:text-sm font-medium mb-3 sm:mb-4">
             Pourquoi nous choisir
           </span>
-          <h2 className="text-4xl lg:text-5xl font-bold text-emerald-950 mb-4">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-emerald-950 mb-3 sm:mb-4 px-4">
             Une expérience <span className="text-gradient-gold">unique</span>
           </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-sm sm:text-base lg:text-lg text-gray-600 max-w-2xl mx-auto px-4">
             Notre plateforme combine technologie de pointe et savoir-faire pédagogique 
             pour offrir la meilleure expérience d'apprentissage du Coran.
           </p>
         </motion.div>
 
-        {/* Features Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* Features Grid - Responsive */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {features.map((feature, index) => (
             <motion.div
               key={feature.title}
@@ -101,22 +101,22 @@ export default function FeaturesSection() {
               whileHover={{ y: -8 }}
               className="group relative"
             >
-              <div className="relative bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 h-full">
-                {/* Icon */}
-                <div className={`w-14 h-14 rounded-2xl ${feature.bgColor} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                  <feature.icon className={`w-7 h-7 bg-gradient-to-br ${feature.color} bg-clip-text`} style={{ color: 'inherit' }} />
-                  <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${feature.color} opacity-10`} />
+              <div className="relative bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 h-full">
+                {/* Icon - Responsive */}
+                <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl ${feature.bgColor} flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                  <feature.icon className={`w-6 h-6 sm:w-7 sm:h-7 bg-gradient-to-br ${feature.color} bg-clip-text`} style={{ color: 'inherit' }} />
+                  <div className={`absolute inset-0 rounded-xl sm:rounded-2xl bg-gradient-to-br ${feature.color} opacity-10`} />
                 </div>
 
-                <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-emerald-700 transition-colors">
+                <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2 group-hover:text-emerald-700 transition-colors">
                   {feature.title}
                 </h3>
-                <p className="text-sm text-gray-600 leading-relaxed">
+                <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
                   {feature.description}
                 </p>
 
                 {/* Hover indicator */}
-                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 to-gold-500 rounded-b-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 to-gold-500 rounded-b-xl sm:rounded-b-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
             </motion.div>
           ))}

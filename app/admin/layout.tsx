@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 import { requireAdmin } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import AdminSidebar from '@/components/admin/AdminSidebar'
+import AdminHeader from '@/components/admin/AdminHeader'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
@@ -35,9 +36,12 @@ export default async function AdminLayout({
           totalSpaces={totalSpaces}
           todayReservations={todayReservations}
         />
-        <main className="ml-72 p-6">
-          {children}
-        </main>
+        <div className="lg:ml-72">
+          <AdminHeader user={user} />
+          <main className="p-4 sm:p-6 lg:p-8 transition-all duration-300">
+            {children}
+          </main>
+        </div>
       </div>
     )
   } catch (error) {

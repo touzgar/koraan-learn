@@ -204,7 +204,7 @@ async function main() {
   console.log('1. Go to Clerk Dashboard: https://dashboard.clerk.com')
   console.log('2. Create these users in Clerk:')
   console.log('   • admin@koraanlearn.com (password: admin123)')
-  console.log('   • instructor@koraanlearn.com (password: instructor123)')
+  console.log('   •  instructor@koraanlearn.com(password: instructor123)')
   console.log('   • student@koraanlearn.com (password: student123)')
   console.log('3. The webhook will automatically sync the clerkId')
   console.log('4. Login and test!')

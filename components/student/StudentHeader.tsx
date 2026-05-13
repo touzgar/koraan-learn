@@ -1,25 +1,24 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { Bell, Search, User, ChevronDown, Settings } from 'lucide-react'
+import { Bell, Search, User, ChevronDown, Settings, Menu } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 
-export default function InstructorHeader() {
-  const [user, setUser] = useState<any>(null)
+interface StudentHeaderProps {
+  user: {
+    id: string
+    firstName: string
+    lastName: string
+    email: string
+    imageUrl?: string | null
+  }
+  onMobileMenuToggle?: () => void
+}
+
+export default function StudentHeader({ user, onMobileMenuToggle }: StudentHeaderProps) {
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    fetch('/api/auth/me')
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.user) {
-          setUser(data.user)
-        }
-      })
-      .catch(() => {})
-  }, [])
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -34,53 +33,49 @@ export default function InstructorHeader() {
   }, [])
 
   return (
-    <header className="sticky top-0 z-20 bg-white/80 backdrop-blur-xl border-b border-emerald-100 shadow-sm">
-      <div className="flex items-center justify-between px-6 lg:px-8 py-4">
-        {/* Search Bar */}
-        <div className="flex-1 max-w-xl">
-          <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search courses, students, lessons..."
-              className="w-full pl-12 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all text-gray-900 placeholder:text-gray-400"
-            />
+    <header className="lg:hidden fixed top-0 left-0 right-0 z-30 bg-white/95 backdrop-blur-xl border-b border-emerald-100 shadow-sm">
+      <div className="flex items-center justify-between px-4 py-3">
+        {/* Mobile Menu Button */}
+        <button
+          onClick={onMobileMenuToggle}
+          className="p-2 hover:bg-emerald-50 rounded-xl transition-colors"
+        >
+          <Menu className="w-6 h-6 text-gray-700" />
+        </button>
+
+        {/* Logo */}
+        <Link href="/student" className="flex items-center gap-2">
+          <div className="w-8 h-8 bg-gradient-to-br from-emerald-600 to-emerald-700 rounded-lg flex items-center justify-center">
+            <span className="text-white font-bold text-sm">K</span>
           </div>
-        </div>
+          <span className="font-bold text-gray-900">KoraanLearn</span>
+        </Link>
 
         {/* Right Side */}
-        <div className="flex items-center gap-4 ml-4">
+        <div className="flex items-center gap-2">
           {/* Notifications */}
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="relative p-2 hover:bg-emerald-50 rounded-xl transition-colors"
-          >
-            <Bell className="w-6 h-6 text-gray-700" />
+          <button className="relative p-2 hover:bg-emerald-50 rounded-xl transition-colors">
+            <Bell className="w-5 h-5 text-gray-700" />
             <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
-          </motion.button>
+          </button>
 
           {/* User Profile with Dropdown */}
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
-              className="flex items-center gap-3 pl-4 border-l border-gray-200 hover:bg-emerald-50 rounded-xl transition-colors pr-2 py-1"
+              className="flex items-center gap-2 hover:bg-emerald-50 rounded-xl transition-colors p-1.5"
             >
-              <div className="text-right hidden sm:block">
-                <p className="text-sm font-semibold text-gray-900">
-                  {user?.firstName} {user?.lastName}
-                </p>
-                <p className="text-xs text-emerald-600">Instructor</p>
-              </div>
-              <div className="w-10 h-10 bg-gradient-to-br from-emerald-600 to-emerald-700 rounded-xl flex items-center justify-center relative">
-                {user?.imageUrl ? (
+              <div className="w-8 h-8 bg-gradient-to-br from-emerald-600 to-emerald-700 rounded-lg flex items-center justify-center overflow-hidden">
+                {user.imageUrl ? (
                   <img
                     src={user.imageUrl}
                     alt="Profile"
-                    className="w-full h-full rounded-xl object-cover"
+                    className="w-full h-full object-cover"
                   />
                 ) : (
-                  <User className="w-5 h-5 text-white" />
+                  <span className="text-white font-bold text-xs">
+                    {user.firstName[0]}{user.lastName[0]}
+                  </span>
                 )}
               </div>
               <ChevronDown
@@ -102,13 +97,13 @@ export default function InstructorHeader() {
                 >
                   <div className="p-3 border-b border-gray-100 bg-gradient-to-br from-emerald-50 to-transparent">
                     <p className="text-sm font-bold text-gray-900">
-                      {user?.firstName} {user?.lastName}
+                      {user.firstName} {user.lastName}
                     </p>
-                    <p className="text-xs text-gray-600">{user?.email}</p>
+                    <p className="text-xs text-gray-600">{user.email}</p>
                   </div>
                   <div className="p-2">
                     <Link
-                      href="/instructor/profile"
+                      href="/student/profile"
                       onClick={() => setDropdownOpen(false)}
                       className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-emerald-50 text-gray-700 hover:text-emerald-700 transition-colors group"
                     >
@@ -116,7 +111,7 @@ export default function InstructorHeader() {
                       <span className="text-sm font-medium">My Profile</span>
                     </Link>
                     <Link
-                      href="/instructor/settings"
+                      href="/student/settings"
                       onClick={() => setDropdownOpen(false)}
                       className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-emerald-50 text-gray-700 hover:text-emerald-700 transition-colors group"
                     >

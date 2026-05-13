@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -33,6 +33,19 @@ const menuItems = [
 export default function InstructorSidebar() {
   const pathname = usePathname()
   const [isMobileOpen, setIsMobileOpen] = useState(false)
+  const [user, setUser] = useState<any>(null)
+
+  // Fetch user data
+  useEffect(() => {
+    fetch('/api/auth/me')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.user) {
+          setUser(data.user)
+        }
+      })
+      .catch(() => {})
+  }, [])
 
   return (
     <>
