@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server'
 import { getCurrentUser } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
+
 export async function POST(
   request: Request,
   { params }: { params: { id: string } }
@@ -14,6 +17,10 @@ export async function POST(
     }
 
     const { answers } = await request.json()
+
+    if (!answers || !Array.isArray(answers)) {
+      return NextResponse.json({ error: 'Invalid answers format' }, { status: 400 })
+    }
 
     // Get quiz with questions
     const quiz = await prisma.quiz.findUnique({
@@ -49,6 +56,10 @@ export async function POST(
     let correctAnswers = 0
     const totalQuestions = quiz.questions.length
 
+    if (totalQuestions === 0) {
+      return NextResponse.json({ error: 'Quiz has no questions' }, { status: 400 })
+    }
+
     quiz.questions.forEach((question, index) => {
       const studentAnswer = answers[index]
       if (studentAnswer === question.correctAnswer) {
@@ -72,6 +83,7 @@ export async function POST(
 
     return NextResponse.json({
       success: true,
+      attemptId: quizAttempt.id,
       score,
       isPassed,
       correctAnswers,
