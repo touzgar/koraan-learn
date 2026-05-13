@@ -3,6 +3,8 @@ import { prisma } from '@/lib/prisma'
 import { getCurrentUser } from '@/lib/auth'
 import { createNotification, NotificationTemplates } from '@/lib/notifications'
 
+export const dynamic = 'force-dynamic'
+
 // Toggle user active status (Admin only) - Updated
 export async function PATCH(
   req: NextRequest,
