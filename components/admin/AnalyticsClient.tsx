@@ -51,12 +51,12 @@ interface AnalyticsData {
     id: string
     title: string
     _count: { enrollments: number }
-    instructor: { firstName: string; lastName: string }
+    instructor: { firstName: string | null; lastName: string | null }
   }>
   recentEnrollments: Array<{
     id: string
     enrolledAt: Date
-    student: { firstName: string; lastName: string; email: string }
+    student: { firstName: string | null; lastName: string | null; email: string }
     course: { title: string }
   }>
 }
@@ -407,7 +407,7 @@ export default function AnalyticsClient({ data }: { data: AnalyticsData }) {
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold text-gray-900 truncate">{course.title}</p>
                   <p className="text-xs text-gray-600">
-                    by {course.instructor.firstName} {course.instructor.lastName}
+                    by {course.instructor.firstName || 'Unknown'} {course.instructor.lastName || ''}
                   </p>
                 </div>
                 <div className="text-right">
@@ -435,11 +435,11 @@ export default function AnalyticsClient({ data }: { data: AnalyticsData }) {
             {data.recentEnrollments.slice(0, 5).map((enrollment) => (
               <div key={enrollment.id} className="flex items-start gap-3 p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
                 <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
-                  {enrollment.student.firstName[0]}{enrollment.student.lastName[0]}
+                  {(enrollment.student.firstName?.[0] || 'U')}{(enrollment.student.lastName?.[0] || '')}
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold text-gray-900 text-sm">
-                    {enrollment.student.firstName} {enrollment.student.lastName}
+                    {enrollment.student.firstName || 'Unknown'} {enrollment.student.lastName || ''}
                   </p>
                   <p className="text-xs text-gray-600 truncate">{enrollment.course.title}</p>
                   <p className="text-xs text-gray-500 mt-1">
