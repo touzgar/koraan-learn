@@ -94,11 +94,11 @@ export default async function CertificatesPage() {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 bg-gradient-to-br from-emerald-600 to-emerald-700 rounded-full flex items-center justify-center text-white text-sm font-bold">
-                        {cert.student.firstName[0]}{cert.student.lastName[0]}
+                        {(cert.student.firstName?.[0] || 'U')}{(cert.student.lastName?.[0] || '')}
                       </div>
                       <div>
                         <p className="text-sm font-semibold text-slate-900">
-                          {cert.student.firstName} {cert.student.lastName}
+                          {cert.student.firstName || 'Unknown'} {cert.student.lastName || ''}
                         </p>
                         <p className="text-xs text-slate-600">{cert.student.email}</p>
                       </div>

@@ -74,7 +74,7 @@ export default function StudentHeader({ user, onMobileMenuToggle }: StudentHeade
                   />
                 ) : (
                   <span className="text-white font-bold text-xs">
-                    {user.firstName[0]}{user.lastName[0]}
+                    {user.firstName?.[0] || 'U'}{user.lastName?.[0] || ''}
                   </span>
                 )}
               </div>

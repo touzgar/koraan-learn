@@ -135,7 +135,7 @@ export default function StudentSidebar({ user, mobileMenuOpen = false, onMobileM
           <div className="p-4 border-b border-emerald-100 bg-gradient-to-br from-emerald-50 to-transparent">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-600 to-emerald-700 flex items-center justify-center text-white font-bold text-sm">
-                {user.firstName[0]}{user.lastName[0]}
+                {user.firstName?.[0] || 'U'}{user.lastName?.[0] || ''}
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold text-gray-900 truncate">

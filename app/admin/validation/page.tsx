@@ -132,11 +132,11 @@ export default async function ValidationPage() {
                   {/* Instructor Info */}
                   <div className="flex items-center gap-3 mb-3">
                     <div className="w-8 h-8 bg-gradient-to-br from-emerald-600 to-emerald-700 rounded-full flex items-center justify-center text-white text-xs font-bold">
-                      {course.instructor.firstName[0]}{course.instructor.lastName[0]}
+                      {course.instructor.firstName?.[0] || 'U'}{course.instructor.lastName?.[0] || ''}
                     </div>
                     <div>
                       <p className="text-sm font-semibold text-slate-900">
-                        {course.instructor.firstName} {course.instructor.lastName}
+                        {course.instructor.firstName || 'Unknown'} {course.instructor.lastName || ''}
                       </p>
                       <p className="text-xs text-slate-600">{course.instructor.email}</p>
                     </div>

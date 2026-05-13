@@ -173,11 +173,11 @@ export default async function PaymentsPage() {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 bg-gradient-to-br from-emerald-600 to-emerald-700 rounded-full flex items-center justify-center text-white text-sm font-bold">
-                        {enrollment.student.firstName[0]}{enrollment.student.lastName[0]}
+                        {enrollment.student.firstName?.[0] || 'U'}{enrollment.student.lastName?.[0] || ''}
                       </div>
                       <div>
                         <p className="text-sm font-semibold text-slate-900">
-                          {enrollment.student.firstName} {enrollment.student.lastName}
+                          {enrollment.student.firstName || 'Unknown'} {enrollment.student.lastName || ''}
                         </p>
                         <p className="text-xs text-slate-600">{enrollment.student.email}</p>
                       </div>
