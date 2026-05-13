@@ -3,6 +3,8 @@ import { prisma } from '@/lib/prisma'
 import { getCurrentUser } from '@/lib/auth'
 import { createNotification, NotificationTemplates } from '@/lib/notifications'
 
+export const dynamic = 'force-dynamic'
+
 // PATCH update reservation status
 export async function PATCH(
   request: NextRequest,
