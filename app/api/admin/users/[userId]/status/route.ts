@@ -49,7 +49,12 @@ export async function PATCH(
     // Create notification if user is deactivated
     if (!updatedUser.isActive) {
       await createNotification(
-        NotificationTemplates.inactiveUser(updatedUser)
+        NotificationTemplates.inactiveUser({
+          firstName: updatedUser.firstName || 'Unknown',
+          lastName: updatedUser.lastName || '',
+          email: updatedUser.email,
+          id: updatedUser.id
+        })
       )
     }
 

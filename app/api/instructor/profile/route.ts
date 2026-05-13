@@ -59,7 +59,6 @@ export async function GET() {
       imageUrl: user.imageUrl,
       role: user.role,
       isActive: user.isActive,
-      createdAt: user.createdAt,
       stats: {
         totalCourses,
         publishedCourses,
@@ -144,7 +143,6 @@ export async function PUT(req: Request) {
       imageUrl: updatedUser.imageUrl,
       role: updatedUser.role,
       isActive: updatedUser.isActive,
-      createdAt: updatedUser.createdAt,
       stats: {
         totalCourses,
         publishedCourses,

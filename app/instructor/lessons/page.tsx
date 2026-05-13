@@ -367,9 +367,9 @@ export default function InstructorLessonsPage() {
                           {lesson.status}
                         </span>
                         {lesson.isPublished ? (
-                          <CheckCircle className="w-4 h-4 text-emerald-600" title="Published" />
+                          <CheckCircle className="w-4 h-4 text-emerald-600" />
                         ) : (
-                          <XCircle className="w-4 h-4 text-gray-400" title="Unpublished" />
+                          <XCircle className="w-4 h-4 text-gray-400" />
                         )}
                       </div>
                     </td>

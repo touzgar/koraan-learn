@@ -20,10 +20,10 @@ export async function GET() {
           include: {
             lessons: {
               where: {
-                published: true,
+                isPublished: true,
               },
               orderBy: {
-                order: 'asc',
+                position: 'asc',
               },
             },
           },
@@ -49,7 +49,7 @@ export async function GET() {
           time: '10:00 AM',
           duration: lesson.duration || 60,
           color: 'emerald',
-          description: lesson.content?.substring(0, 100) || '',
+          description: lesson.description?.substring(0, 100) || '',
         })
       })
     })

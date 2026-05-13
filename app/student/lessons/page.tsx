@@ -19,13 +19,17 @@ import {
 interface Lesson {
   id: string
   title: string
-  course: string
-  courseId: string
+  course: {
+    id: string
+    title: string
+    instructor: string
+  }
   duration: number
   completed: boolean
-  locked: boolean
-  progress: number
-  hasResources: boolean
+  position: number
+  videoUrl: string | null
+  pdfUrl: string | null
+  description: string | null
 }
 
 export default function StudentLessonsPage() {
@@ -42,7 +46,8 @@ export default function StudentLessonsPage() {
         if (response.ok) {
           const data = await response.json()
           setLessons(data.lessons || [])
-          setCourses(['all', ...Array.from(new Set(data.lessons.map((l: Lesson) => l.course)))])
+          const courseTitles = data.lessons.map((l: any) => l.course.title) as string[]
+          setCourses(['all', ...Array.from(new Set(courseTitles))])
         }
       } catch (error) {
         console.error('Failed to fetch lessons:', error)
@@ -55,14 +60,14 @@ export default function StudentLessonsPage() {
 
   const filteredLessons = lessons.filter(lesson => {
     const matchesSearch = lesson.title.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesCourse = filterCourse === 'all' || lesson.course === filterCourse
+    const matchesCourse = filterCourse === 'all' || lesson.course.title === filterCourse
     return matchesSearch && matchesCourse
   })
 
   const stats = {
     total: lessons.length,
     completed: lessons.filter(l => l.completed).length,
-    inProgress: lessons.filter(l => l.progress > 0 && l.progress < 100).length,
+    inProgress: lessons.filter(l => !l.completed).length,
     totalDuration: lessons.reduce((sum, l) => sum + l.duration, 0)
   }
 
@@ -162,22 +167,16 @@ export default function StudentLessonsPage() {
         {filteredLessons.map((lesson) => (
           <div
             key={lesson.id}
-            className={`bg-white rounded-2xl shadow-lg border border-emerald-100 p-6 hover:shadow-xl transition-all ${
-              lesson.locked ? 'opacity-60' : ''
-            }`}
+            className="bg-white rounded-2xl shadow-lg border border-emerald-100 p-6 hover:shadow-xl transition-all"
           >
             <div className="flex items-center gap-6">
               {/* Icon */}
               <div className={`w-16 h-16 rounded-xl flex items-center justify-center flex-shrink-0 ${
                 lesson.completed
                   ? 'bg-gradient-to-br from-green-500 to-emerald-600'
-                  : lesson.locked
-                  ? 'bg-gray-300'
                   : 'bg-gradient-to-br from-emerald-500 to-teal-600'
               }`}>
-                {lesson.locked ? (
-                  <Lock className="w-8 h-8 text-white" />
-                ) : lesson.completed ? (
+                {lesson.completed ? (
                   <CheckCircle className="w-8 h-8 text-white" />
                 ) : (
                   <PlayCircle className="w-8 h-8 text-white" />
@@ -189,14 +188,14 @@ export default function StudentLessonsPage() {
                 <div className="flex items-start justify-between mb-2">
                   <div>
                     <h3 className="text-lg font-bold text-gray-900 mb-1">{lesson.title}</h3>
-                    <p className="text-sm text-gray-600">{lesson.course}</p>
+                    <p className="text-sm text-gray-600">{lesson.course.title}</p>
                   </div>
                   <div className="flex items-center gap-4">
                     <div className="flex items-center gap-1 text-sm text-gray-600">
                       <Clock className="w-4 h-4" />
                       <span>{lesson.duration} min</span>
                     </div>
-                    {lesson.hasResources && (
+                    {(lesson.videoUrl || lesson.pdfUrl) && (
                       <div className="flex items-center gap-1 text-sm text-gray-600">
                         <FileText className="w-4 h-4" />
                         <span>Resources</span>
@@ -205,47 +204,19 @@ export default function StudentLessonsPage() {
                   </div>
                 </div>
 
-                {/* Progress Bar */}
-                {!lesson.locked && lesson.progress > 0 && (
-                  <div className="mb-3">
-                    <div className="flex items-center justify-between text-sm mb-1">
-                      <span className="text-gray-600">Progress</span>
-                      <span className="font-semibold text-gray-900">{lesson.progress}%</span>
-                    </div>
-                    <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-gradient-to-r from-emerald-600 to-teal-600 rounded-full"
-                        style={{ width: `${lesson.progress}%` }}
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {/* Actions */}
-                <div className="flex items-center gap-3">
-                  {lesson.locked ? (
-                    <button
-                      disabled
-                      className="flex items-center gap-2 px-6 py-2 bg-gray-200 text-gray-500 rounded-xl font-semibold cursor-not-allowed"
-                    >
-                      <Lock className="w-4 h-4" />
-                      Locked
+                {/* Action Button */}
+                <div className="mt-4 flex items-center gap-3">
+                  <Link href={`/student/lessons/${lesson.id}`}>
+                    <button className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl hover:from-emerald-700 hover:to-teal-700 transition-all font-semibold shadow-lg">
+                      <PlayCircle className="w-4 h-4" />
+                      {lesson.completed ? 'Rewatch' : 'Start Lesson'}
                     </button>
-                  ) : (
-                    <>
-                      <Link href={`/student/lessons/${lesson.id}`}>
-                        <button className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl hover:from-emerald-700 hover:to-teal-700 transition-all font-semibold shadow-lg">
-                          <PlayCircle className="w-4 h-4" />
-                          {lesson.completed ? 'Rewatch' : lesson.progress > 0 ? 'Continue' : 'Start Lesson'}
-                        </button>
-                      </Link>
-                      {lesson.hasResources && (
-                        <button className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-colors">
-                          <Download className="w-4 h-4" />
-                          Resources
-                        </button>
-                      )}
-                    </>
+                  </Link>
+                  {(lesson.videoUrl || lesson.pdfUrl) && (
+                    <button className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-colors">
+                      <Download className="w-4 h-4" />
+                      Resources
+                    </button>
                   )}
                 </div>
               </div>

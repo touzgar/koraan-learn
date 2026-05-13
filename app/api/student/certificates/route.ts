@@ -20,6 +20,7 @@ export async function GET() {
         course: {
           include: {
             instructor: true,
+            category: true,
           },
         },
       },
@@ -31,13 +32,13 @@ export async function GET() {
     const certificates = completedEnrollments.map((enrollment) => ({
       id: enrollment.id,
       course: enrollment.course.title,
-      instructor: `${enrollment.course.instructor.firstName} ${enrollment.course.instructor.lastName}`,
+      instructor: `${enrollment.course.instructor.firstName || 'Unknown'} ${enrollment.course.instructor.lastName || ''}`,
       completedDate: enrollment.updatedAt,
       certificateUrl: null,
       certificateNumber: `CERT-${enrollment.id.slice(0, 8).toUpperCase()}`,
       courseId: enrollment.course.id,
       description: enrollment.course.description,
-      category: enrollment.course.category,
+      category: enrollment.course.category?.name || 'Uncategorized',
     }))
 
     return NextResponse.json({ certificates })

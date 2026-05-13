@@ -22,7 +22,13 @@ export default async function StudentLayout({
     }
 
     return (
-      <StudentLayoutClient user={user}>
+      <StudentLayoutClient user={{
+        id: user.id,
+        firstName: user.firstName || 'Unknown',
+        lastName: user.lastName || '',
+        email: user.email,
+        imageUrl: user.imageUrl
+      }}>
         {children}
       </StudentLayoutClient>
     )

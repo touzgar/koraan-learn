@@ -244,7 +244,7 @@ export default async function AdminDashboard() {
   }
 }
 
-// Export the pending validation count for the sidebar
-export async function getPendingValidationCount() {
+// Helper function for the pending validation count
+async function getPendingValidationCount() {
   return await prisma.course.count({ where: { status: 'DRAFT' } })
 }

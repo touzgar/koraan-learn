@@ -67,8 +67,14 @@ export async function POST(request: NextRequest) {
     // Create notification
     if (instructor) {
       const notificationData = status === 'DRAFT' 
-        ? NotificationTemplates.draftCourse(space, instructor)
-        : NotificationTemplates.newCourse(space, instructor)
+        ? NotificationTemplates.draftCourse(space, {
+            firstName: instructor.firstName || 'Unknown',
+            lastName: instructor.lastName || ''
+          })
+        : NotificationTemplates.newCourse(space, {
+            firstName: instructor.firstName || 'Unknown',
+            lastName: instructor.lastName || ''
+          })
       
       await createNotification(notificationData)
     }

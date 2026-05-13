@@ -31,14 +31,14 @@ export async function GET() {
       id: course.id,
       title: course.title,
       description: course.description,
-      level: course.level || 'Tous niveaux',
+      level: 'Tous niveaux',
       duration: `${course._count.lessons} leçons`,
       students: course._count.enrollments,
       rating: 4.8, // You can calculate this from reviews if you have them
-      image: course.thumbnail || 'https://images.unsplash.com/photo-1589994965851-a8f479c573a9?w=400&h=250&fit=crop',
+      image: course.imageUrl || 'https://images.unsplash.com/photo-1589994965851-a8f479c573a9?w=400&h=250&fit=crop',
       price: `${course.price}€`,
-      tags: [course.category, course.level || 'Tous niveaux'],
-      instructor: `${course.instructor.firstName} ${course.instructor.lastName}`,
+      tags: ['Tous niveaux'],
+      instructor: `${course.instructor.firstName || 'Unknown'} ${course.instructor.lastName || ''}`,
     }))
 
     return NextResponse.json({ courses: formattedCourses })

@@ -60,17 +60,17 @@ export async function GET() {
       }
 
       // New enrollment notification
-      if (isRecent(enrollment.createdAt, 7)) {
+      if (isRecent(enrollment.enrolledAt, 7)) {
         notifications.push({
           id: `enroll-${enrollment.id}`,
           type: 'course',
           title: 'Welcome to the Course!',
-          message: `You've enrolled in "${enrollment.course.title}" by ${enrollment.course.instructor.firstName} ${enrollment.course.instructor.lastName}`,
-          time: formatTimeAgo(enrollment.createdAt),
+          message: `You've enrolled in "${enrollment.course.title}" by ${enrollment.course.instructor.firstName || 'Unknown'} ${enrollment.course.instructor.lastName || ''}`,
+          time: formatTimeAgo(enrollment.enrolledAt),
           read: false,
           icon: 'BookOpen',
           color: 'teal',
-          date: enrollment.createdAt,
+          date: enrollment.enrolledAt,
         })
       }
     })

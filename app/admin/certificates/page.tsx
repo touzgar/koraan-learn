@@ -110,7 +110,7 @@ export default async function CertificatesPage() {
                     </p>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <p className="text-sm font-mono text-slate-700">{cert.certificateNumber}</p>
+                    <p className="text-sm font-mono text-slate-700">{cert.id}</p>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <p className="text-sm text-slate-700">

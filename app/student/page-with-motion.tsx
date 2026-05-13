@@ -13,7 +13,7 @@ import {
   Calendar as CalendarIcon,
   Zap,
   Trophy,
-  Fire,
+  Flame,
   ArrowRight,
   BarChart3
 } from 'lucide-react'
@@ -120,7 +120,7 @@ export default function StudentDashboard() {
   const achievements = [
     { id: 1, title: 'Fast Learner', description: 'Complete 5 courses in a month', icon: Zap, unlocked: true },
     { id: 2, title: 'Perfect Score', description: 'Get 100% on 3 quizzes', icon: Trophy, unlocked: true },
-    { id: 3, title: 'Streak Master', description: '7 days learning streak', icon: Fire, unlocked: false },
+    { id: 3, title: 'Streak Master', description: '7 days learning streak', icon: Flame, unlocked: false },
     { id: 4, title: 'Course Completer', description: 'Finish 10 courses', icon: Target, unlocked: false }
   ]
 

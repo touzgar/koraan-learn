@@ -20,10 +20,10 @@ export async function GET() {
           include: {
             lessons: {
               where: {
-                published: true,
+                isPublished: true,
               },
               orderBy: {
-                order: 'asc',
+                position: 'asc',
               },
             },
             instructor: {
@@ -44,14 +44,15 @@ export async function GET() {
         lessons.push({
           id: lesson.id,
           title: lesson.title,
-          content: lesson.content,
+          description: lesson.description,
           duration: lesson.duration || 60,
-          order: lesson.order,
+          position: lesson.position,
           videoUrl: lesson.videoUrl,
+          pdfUrl: lesson.pdfUrl,
           course: {
             id: enrollment.course.id,
             title: enrollment.course.title,
-            instructor: `${enrollment.course.instructor.firstName} ${enrollment.course.instructor.lastName}`,
+            instructor: `${enrollment.course.instructor.firstName || 'Unknown'} ${enrollment.course.instructor.lastName || ''}`,
           },
           completed: false, // You can track this in a separate table if needed
         })

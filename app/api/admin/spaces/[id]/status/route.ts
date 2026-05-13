@@ -44,7 +44,10 @@ export async function PATCH(
       await createNotification(
         NotificationTemplates.newCourse(
           { title: course.title, id: space.id },
-          course.instructor
+          {
+            firstName: course.instructor.firstName || 'Unknown',
+            lastName: course.instructor.lastName || ''
+          }
         )
       )
     }

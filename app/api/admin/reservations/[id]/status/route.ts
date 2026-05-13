@@ -57,7 +57,10 @@ export async function PATCH(
       if (status === 'COMPLETED') {
         await createNotification(
           NotificationTemplates.completedEnrollment(
-            enrollment.student,
+            {
+              firstName: enrollment.student.firstName || 'Unknown',
+              lastName: enrollment.student.lastName || ''
+            },
             enrollment.course,
             reservation.id
           )
@@ -65,7 +68,10 @@ export async function PATCH(
       } else if (status === 'CANCELLED') {
         await createNotification(
           NotificationTemplates.cancelledEnrollment(
-            enrollment.student,
+            {
+              firstName: enrollment.student.firstName || 'Unknown',
+              lastName: enrollment.student.lastName || ''
+            },
             enrollment.course,
             reservation.id
           )
