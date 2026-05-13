@@ -41,7 +41,7 @@ interface AnalyticsData {
   distribution: {
     usersByRole: Array<{ role: string; _count: number }>
     coursesByStatus: Array<{ status: string; _count: number }>
-    coursesByCategory: Array<{ categoryId: string; _count: number }>
+    coursesByCategory: Array<{ categoryId: string | null; _count: number }>
   }
   trends: {
     enrollmentsByMonth: Array<{ month: string; count: number }>

@@ -64,7 +64,6 @@ export default async function AnalyticsPage() {
     prisma.course.groupBy({
       by: ['categoryId'],
       _count: true,
-      where: { categoryId: { not: null } }
     }),
     
     // Top performing courses
