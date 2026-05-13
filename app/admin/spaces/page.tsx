@@ -2,6 +2,9 @@ import { prisma } from '@/lib/prisma'
 import { getCurrentUser } from '@/lib/auth'
 import SpacesClient from '@/components/admin/SpacesClient'
 
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 export default async function SpacesPage() {
   const user = await getCurrentUser()
   

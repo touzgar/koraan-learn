@@ -6,6 +6,9 @@ import RecentCourses from '@/components/admin/RecentCourses'
 import UserRoleChart from '@/components/admin/UserRoleChart'
 import CourseStatusChart from '@/components/admin/CourseStatusChart'
 
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 export default async function AdminDashboard() {
   try {
     const user = await getCurrentUser()

@@ -1,6 +1,9 @@
 import { prisma } from '@/lib/prisma'
 import { TrendingUp, Users, BookOpen, DollarSign, Award, Clock } from 'lucide-react'
 
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 export default async function StatisticsPage() {
   const [users, courses, enrollments, certificates] = await Promise.all([
     prisma.user.findMany({ select: { createdAt: true, role: true } }),

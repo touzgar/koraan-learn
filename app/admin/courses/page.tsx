@@ -1,6 +1,9 @@
 import { prisma } from '@/lib/prisma'
 import { BookOpen, Users, Clock, DollarSign, Eye, Edit, Trash2 } from 'lucide-react'
 
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 export default async function CoursesPage() {
   const courses = await prisma.course.findMany({
     include: {

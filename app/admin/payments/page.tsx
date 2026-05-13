@@ -2,6 +2,9 @@ import { prisma } from '@/lib/prisma'
 import { getCurrentUserWithRole } from '@/lib/user-roles'
 import { CreditCard, TrendingUp, DollarSign, Users, Download, Filter } from 'lucide-react'
 
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 export default async function PaymentsPage() {
   const user = await getCurrentUserWithRole()
 

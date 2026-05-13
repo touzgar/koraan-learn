@@ -2,6 +2,9 @@ import { prisma } from '@/lib/prisma'
 import { getCurrentUser } from '@/lib/auth'
 import CalendarClient from '@/components/admin/CalendarClient'
 
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 export default async function CalendarPage() {
   const user = await getCurrentUser()
   

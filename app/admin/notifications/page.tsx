@@ -2,6 +2,9 @@ import { prisma } from '@/lib/prisma'
 import { getCurrentUser } from '@/lib/auth'
 import NotificationsClient from '@/components/admin/NotificationsClient'
 
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 export default async function NotificationsPage() {
   const user = await getCurrentUser()
   

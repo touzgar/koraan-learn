@@ -2,6 +2,9 @@ import { prisma } from '@/lib/prisma'
 import { getCurrentUser } from '@/lib/auth'
 import ReservationsClient from '@/components/admin/ReservationsClient'
 
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 export default async function ReservationsPage() {
   const user = await getCurrentUser()
   

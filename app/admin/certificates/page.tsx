@@ -1,6 +1,9 @@
 import { prisma } from '@/lib/prisma'
 import { Award, Download, Eye, Calendar } from 'lucide-react'
 
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 export default async function CertificatesPage() {
   const certificates = await prisma.certificate.findMany({
     include: {
