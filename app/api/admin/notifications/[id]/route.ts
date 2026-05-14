@@ -8,7 +8,7 @@ export const runtime = 'nodejs'
 // DELETE notification
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const currentUser = await getCurrentUser()
@@ -20,6 +20,7 @@ export async function DELETE(
       )
     }
 
+    const params = await context.params
     await prisma.notification.delete({
       where: { id: params.id },
     })
@@ -37,7 +38,7 @@ export async function DELETE(
 // PATCH mark as read
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const currentUser = await getCurrentUser()
@@ -52,6 +53,7 @@ export async function PATCH(
     const body = await req.json()
     const { isRead } = body
 
+    const params = await context.params
     const notification = await prisma.notification.update({
       where: { id: params.id },
       data: { isRead },
