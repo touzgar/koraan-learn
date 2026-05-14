@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation'
-import { requireAdmin } from '@/lib/auth'
+import { getCurrentUser } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import AdminSidebar from '@/components/admin/AdminSidebar'
 import AdminHeader from '@/components/admin/AdminHeader'
@@ -13,7 +13,17 @@ export default async function AdminLayout({
   children: React.ReactNode
 }) {
   try {
-    const user = await requireAdmin()
+    const user = await getCurrentUser()
+    
+    // Redirect if not authenticated
+    if (!user) {
+      redirect('/sign-in')
+    }
+    
+    // Redirect if not admin
+    if (user.role !== 'ADMIN') {
+      redirect('/dashboard')
+    }
 
     // Fetch dynamic counts for sidebar badges
     const [pendingNotifications, totalSpaces, todayReservations] = await Promise.all([

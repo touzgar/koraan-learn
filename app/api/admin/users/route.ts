@@ -1,14 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { requireAdmin } from '@/lib/user-roles'
+import { getCurrentUser } from '@/lib/auth'
 
 export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
 
 // Get all users (Admin only)
 export async function GET(req: NextRequest) {
   try {
     // Check if current user is admin
-    await requireAdmin()
+    const user = await getCurrentUser()
+    
+    if (!user || user.role !== 'ADMIN') {
+      return NextResponse.json(
+        { error: 'Access denied. Admin privileges required.' },
+        { status: 403 }
+      )
+    }
 
     const { searchParams } = new URL(req.url)
     const role = searchParams.get('role')
