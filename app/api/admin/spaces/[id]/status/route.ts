@@ -4,6 +4,7 @@ import { getCurrentUser } from '@/lib/auth'
 import { createNotification, NotificationTemplates } from '@/lib/notifications'
 
 export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
 
 // PATCH update space status
 export async function PATCH(

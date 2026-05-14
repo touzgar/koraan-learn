@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { getCurrentUser } from '@/lib/auth'
 
 export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
 
 // POST bulk actions (mark as read or delete)
 export async function POST(req: NextRequest) {
@@ -51,3 +52,4 @@ export async function POST(req: NextRequest) {
     )
   }
 }
+

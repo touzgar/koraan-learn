@@ -4,6 +4,7 @@ import { getCurrentUser } from '@/lib/auth'
 import { createNotification, NotificationTemplates } from '@/lib/notifications'
 
 export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
 
 // Toggle user active status (Admin only) - Updated
 export async function PATCH(

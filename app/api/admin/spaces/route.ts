@@ -4,6 +4,7 @@ import { getCurrentUser } from '@/lib/auth'
 import { createNotification, NotificationTemplates } from '@/lib/notifications'
 
 export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
 
 // GET all spaces
 export async function GET(request: NextRequest) {
@@ -87,3 +88,4 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Failed to create space' }, { status: 500 })
   }
 }
+

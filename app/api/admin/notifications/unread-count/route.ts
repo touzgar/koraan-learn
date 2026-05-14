@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { getCurrentUser } from '@/lib/auth'
 
 export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
 
 // GET unread notification count
 export async function GET(req: NextRequest) {
@@ -29,3 +30,4 @@ export async function GET(req: NextRequest) {
     )
   }
 }
+
