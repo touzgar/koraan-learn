@@ -1,22 +1,49 @@
-import { redirect } from 'next/navigation'
-import { getCurrentUser } from '@/lib/auth'
-import InstructorDashboardClient from '@/components/instructor/InstructorDashboardClient'
+'use client'
 
-export const dynamic = 'force-dynamic'
-export const revalidate = 0
+import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
+import {
+  BookOpen,
+  Users,
+  TrendingUp,
+  Award,
+  Star,
+  Clock,
+  Loader2,
+  DollarSign,
+  ArrowUpRight,
+  ArrowDownRight,
+  Eye,
+  MessageSquare,
+  Calendar,
+  BarChart3,
+} from 'lucide-react'
+import Link from 'next/link'
 
-export default async function InstructorDashboard() {
-  const user = await getCurrentUser()
-  
-  if (!user) {
-    redirect('/sign-in')
+interface DashboardData {
+  stats: {
+    totalCourses: number
+    totalStudents: number
+    courseViews: number
+    certificatesIssued: number
+    totalRevenue: string
+    avgRating: number
   }
-  
-  if (user.role !== 'INSTRUCTOR') {
-    redirect('/dashboard')
-  }
-  
-  return <InstructorDashboardClient />
+  recentCourses: Array<{
+    id: string
+    title: string
+    students: number
+    rating: number
+    status: string
+  }>
+  recentStudents: Array<{
+    name: string
+    course: string
+    progress: number
+  }>
+}
+
+export default function InstructorDashboardClient() {
   const [data, setData] = useState<DashboardData | null>(null)
   const [loading, setLoading] = useState(true)
   const [greeting, setGreeting] = useState('')
@@ -77,7 +104,7 @@ export default async function InstructorDashboard() {
     {
       icon: DollarSign,
       label: 'Total Revenue',
-      value: `$${data?.stats.totalRevenue || '0.00'}`,
+      value: `${data?.stats.totalRevenue || '0.00'}`,
       change: '+18%',
       trend: 'up',
       color: 'from-purple-500 to-purple-600',
@@ -394,4 +421,3 @@ export default async function InstructorDashboard() {
     </div>
   )
 }
-
