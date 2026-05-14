@@ -1,4 +1,4 @@
-'use client'
+ï»¿'use client'
 
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
@@ -181,7 +181,7 @@ export default function StudentQuizDetailClient() {
               )}
             </div>
             <h1 className="text-4xl font-bold mb-2">
-              {passed ? 'Congratulations! ­ƒÄë' : 'Keep Trying! ­ƒÆ¬'}
+              {passed ? 'Congratulations! Â­Æ’Ã„Ã«' : 'Keep Trying! Â­Æ’Ã†Â¬'}
             </h1>
             <p className="text-xl mb-6">
               {passed 
